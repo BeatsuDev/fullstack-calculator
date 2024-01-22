@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    font-weight: normal;
+    min-width: 0;
+}
+
+body {
+    min-height: 100vh;
+    font-size: 15px;
+    background-color: #1e1e1e;
+    color: #eee;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: bold;
+}
