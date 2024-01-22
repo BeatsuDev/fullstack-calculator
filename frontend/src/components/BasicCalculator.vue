@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { useCalculatorStore } from "@/stores/calculator";
-import { useCalculatorHistoryStore } from "@/stores/history";
+import { useCalculatorHistoryStore, type Calculation } from "@/stores/history";
 import { storeToRefs } from "pinia";
 
-type ButtonType = "number" | "operator" | "clear" | "equal";
 
 const buttons = [
     { name: "7", type: "number", css: "" },
@@ -24,6 +23,21 @@ const buttons = [
     { name: "+", type: "operator", css: "" },
 ] as const;
 
+type ButtonType = typeof buttons[number]["type"];
+
+function buttonCssFor(buttonType: ButtonType): string {
+    switch (buttonType) {
+        case "number":
+            return "text-white bg-gray-500";
+        case "operator":
+            return "text-white bg-blue-500/50";
+        case "clear":
+            return "bg-red-500 text-white";
+        case "equal":
+            return "bg-yellow-500 text-white";
+    }
+}
+
 const calculatorStore = useCalculatorStore();
 const calculatorHistoryStore = useCalculatorHistoryStore();
 
@@ -38,33 +52,32 @@ function handleClick(button: (typeof buttons)[number]): void {
             return calculatorStore.clearDisplay();
         case "equal":
             return handleEqualsPressed();
+        default:
+            throw new Error("All button types were not handled in handleClick") as never;
     }
 }
 
 function handleEqualsPressed() {
     // TODO: Connect to backend
-    const result = eval(display.value);
-    calculatorHistoryStore.addCalculation(display.value, result.toString());
-    calculatorStore.setDisplay(result.toString());
-}
+    const result: any = eval(display.value);
 
-function buttonCssFor(buttonType: ButtonType): string {
-    switch (buttonType) {
-        case "number":
-            return "text-white bg-gray-500";
-        case "operator":
-            return "text-white bg-blue-500/50";
-        case "clear":
-            return "bg-red-500 text-white";
-        case "equal":
-            return "bg-yellow-500 text-white";
+    if (typeof result !== "number") {
+        throw new Error("Result is not a number");
     }
+
+    const calculation: Calculation = {
+        expression: display.value,
+        answer: result.toString()
+    };
+
+    calculatorHistoryStore.addCalculation(calculation);
+    calculatorStore.setDisplay(result.toString());
 }
 </script>
 
 <template>
-    <div id="calculator-container" class="border-2 border-white rounded-xl p-5 max-w-3xl bg-gray-800 mx-auto">
-        <div id="calculator-display" class="p-2 mb-4 border-2 border-white box-content h-8 text-2xl text-end align-middle">
+    <div id="calculator-container" class="border-2 border-white rounded-xl p-5 bg-gray-800 mx-auto">
+        <div id="calculator-display" class="p-2 mb-4 border-2 border-white bg-gray-500 box-content h-8 text-2xl text-end align-middle">
             {{ display }}
         </div>
         <div id="calculator-buttons" class="grid grid-cols-4">

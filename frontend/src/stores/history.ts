@@ -1,16 +1,15 @@
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 
+export type Calculation = { expression: string; answer: string; };
+
 export const useCalculatorHistoryStore = defineStore("calculatorHistory", () => {
-    const history = ref<string[]>([]);
+    const calculationHistory = ref<Calculation[]>([]);
+    const history = computed(() => calculationHistory.value);
 
-    function addCalculation(calculation: string, result: string) {
-        history.value.push(calculation, result);
+    function addCalculation(calculation: Calculation) {
+        calculationHistory.value.push(calculation);
     }
 
-    function getHistory() {
-        return history.value;
-    }
-
-    return { addCalculation, getHistory };
+    return { history, addCalculation };
 });
