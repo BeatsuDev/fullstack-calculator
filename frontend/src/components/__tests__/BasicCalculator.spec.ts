@@ -11,28 +11,24 @@ describe("Calculator functions", () => {
     let numberButtons = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
     let allButtons = [...numberButtons, "+", "-", "*", "/", "="];
 
+    let wrapper: ReturnType<typeof mount>;
+
     beforeEach(() => {
         setActivePinia(createPinia());
+        wrapper = mount(BasicCalculator, {
+            global: {
+                plugins: [createTestingPinia({ stubActions: false, })],
+            },
+        });
     });
 
     it("renders all buttons", () => {
-        const wrapper = mount(BasicCalculator, {
-            global: {
-                plugins: [createTestingPinia()],
-            },
-        });
-
         for (let button of allButtons) {
             expect(wrapper.text()).toContain(button);
         }
     });
 
     it("clicking number buttons calls the store addInput method", async () => {
-        const wrapper = mount(BasicCalculator, {
-            global: {
-                plugins: [createTestingPinia()],
-            },
-        });
         const store = useCalculatorStore();
 
         const buttons = wrapper.findAll("button");
@@ -43,11 +39,6 @@ describe("Calculator functions", () => {
     });
 
     it("renders the display from pinia store", async () => {
-        const wrapper = mount(BasicCalculator, {
-            global: {
-                plugins: [createTestingPinia({ stubActions: false, })],
-            },
-        });
         const store = useCalculatorStore();
 
         store.addInput("1");
@@ -60,11 +51,6 @@ describe("Calculator functions", () => {
     });
 
     it("clicking the clear button calls the store clear method", async () => {
-        const wrapper = mount(BasicCalculator, {
-            global: {
-                plugins: [createTestingPinia()],
-            },
-        });
         const store = useCalculatorStore();
 
         const buttons = wrapper.findAll("button");
@@ -75,11 +61,6 @@ describe("Calculator functions", () => {
     });
 
     it("clicking equals when display is empty should NOT call the calculator history store addCalculation method", async () => {
-        const wrapper = mount(BasicCalculator, {
-            global: {
-                plugins: [createTestingPinia()],
-            },
-        });
         const store = useCalculatorHistoryStore();
 
         const buttons = wrapper.findAll("button");
@@ -90,11 +71,6 @@ describe("Calculator functions", () => {
     });
 
     it("clicking equals when display has a value should call the calculator history store addCalculation method", async () => {
-        const wrapper = mount(BasicCalculator, {
-            global: {
-                plugins: [createTestingPinia({ stubActions: false, })],
-            },
-        });
         const store = useCalculatorHistoryStore();
 
         const buttons = wrapper.findAll("button");
@@ -113,11 +89,6 @@ describe("Calculator functions", () => {
     });
 
     it("clicking the equals button should call the calculation store setDisplay method", async () => {
-        const wrapper = mount(BasicCalculator, {
-            global: {
-                plugins: [createTestingPinia({ stubActions: false, })],
-            },
-        });
         const store = useCalculatorStore();
 
         const buttons = wrapper.findAll("button");
