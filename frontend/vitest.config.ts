@@ -6,7 +6,13 @@ export default mergeConfig(
   viteConfig,
   defineConfig({
     test: {
-      environment: 'jsdom',
+      globals: true,
+      environment: 'happy-dom',
+      coverage: {
+        provider: 'istanbul',
+        all: true,
+        include: ['src/components/**/*.{vue,ts,tsx}', 'src/stores/**/*.ts'],
+      },
       exclude: [...configDefaults.exclude, 'e2e/*'],
       root: fileURLToPath(new URL('./', import.meta.url))
     }

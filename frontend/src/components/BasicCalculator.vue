@@ -58,6 +58,10 @@ function handleClick(button: (typeof buttons)[number]): void {
 }
 
 function handleEqualsPressed() {
+    if (display.value === "") {
+        return;
+    }
+
     // TODO: Connect to backend
     const result: any = eval(display.value);
 
