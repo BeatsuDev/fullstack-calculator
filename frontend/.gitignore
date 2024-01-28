@@ -14,7 +14,6 @@ dist-ssr
 coverage
 *.local
 bun.lockb
-package-lock.json
 
 /cypress/videos/
 /cypress/screenshots/

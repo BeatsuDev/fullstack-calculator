@@ -7,11 +7,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: frontend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
 
-      - run: bun install
+      - run: npm install
         working-directory: frontend
-      - run: bun run format --check
+
+      - run: npm run format --check
         working-directory: frontend
 
   vitest:
@@ -19,11 +24,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: frontend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
 
-      - run: bun install
+      - run: npm install
         working-directory: frontend
-      - run: bun run test:unit
+
+      - run: npm run test:unit
         working-directory: frontend
   
   cypress:
@@ -31,12 +41,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v1
+      - name: Cache node modules
+        uses: actions/cache@v2
+        with:
+          path: frontend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
 
-      # tbh, using bun here is useless. It just runs vite anyway. Maybe faster install time tho?
-      - run: bun install
+      - run: npm install
         working-directory: frontend
-      - run: bun run build
+
+      - run: npm run build
         working-directory: frontend
-      - run: bun run test:e2e
+
+      - run: npm run test:e2e
         working-directory: frontend
