@@ -9,7 +9,7 @@ import { useCalculatorHistoryStore } from "@/stores/history";
 
 describe("Calculator functions", () => {
     let numberButtons = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-    let allButtons = [...numberButtons, "+", "-", "*", "/", "="];
+    let allButtons = [...numberButtons, "+", "-", "*", "/", "=", "C", "(", ")"];
 
     let wrapper: ReturnType<typeof mount>;
 

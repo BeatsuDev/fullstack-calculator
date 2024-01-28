@@ -5,6 +5,9 @@ import { storeToRefs } from "pinia";
 
 
 const buttons = [
+    { name: "(", type: "operator", css: "" },
+    { name: ")", type: "operator", css: "" },
+    { name: "C", type: "clear", css: "col-span-2" },
     { name: "7", type: "number", css: "" },
     { name: "8", type: "number", css: "" },
     { name: "9", type: "number", css: "" },
@@ -17,7 +20,7 @@ const buttons = [
     { name: "2", type: "number", css: "" },
     { name: "3", type: "number", css: "" },
     { name: "-", type: "operator", css: "" },
-    { name: "AC", type: "clear", css: "" },
+    { name: ".", type: "number", css: "" },
     { name: "0", type: "number", css: "" },
     { name: "=", type: "equal", css: "" },
     { name: "+", type: "operator", css: "" },
@@ -32,7 +35,7 @@ function buttonCssFor(buttonType: ButtonType): string {
         case "operator":
             return "text-white bg-blue-500/50";
         case "clear":
-            return "bg-red-500 text-white";
+            return "text-white bg-red-500";
         case "equal":
             return "bg-yellow-500 text-white";
     }
@@ -62,10 +65,22 @@ function handleEqualsPressed() {
         return;
     }
 
-    // TODO: Connect to backend
-    const result: any = eval(display.value);
+    let result: any;
+    try {
+        // TODO: Connect to backend
+        result = eval(display.value);
+    } catch (error: any) {
+        calculatorStore.setDisplay("Error");
+        throw new Error("Could not evaluate expression.\n\n" + error);
+    }
 
     if (typeof result !== "number") {
+        calculatorStore.setDisplay("Error");
+        throw new Error("Result is not a number");
+    }
+
+    if (result === Infinity || result === -Infinity || isNaN(result)) {
+        calculatorStore.setDisplay("Error");
         throw new Error("Result is not a number");
     }
 
@@ -80,7 +95,7 @@ function handleEqualsPressed() {
 </script>
 
 <template>
-    <div id="calculator-container" class="border-2 border-white rounded-xl p-5 bg-gray-800 mx-auto">
+    <div id="calculator-container" class="border-2 border-white rounded-xl p-5 bg-gray-800 mx-auto min-w-80">
         <div id="calculator-display" class="p-2 mb-4 border-2 border-white bg-gray-500 box-content h-8 text-2xl text-end align-middle">
             {{ display }}
         </div>

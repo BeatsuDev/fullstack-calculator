@@ -37,7 +37,6 @@ describe("Calculator functions", () => {
         expect(submitButton.text()).toBe("Submit");
     });
 
-    /* TODO: Fix
     it("should emit submit event when submit button is clicked", async () => {
         const nameInput = wrapper.find("input#name");
         const emailInput = wrapper.find("input#email");
@@ -50,14 +49,13 @@ describe("Calculator functions", () => {
 
         console.log((wrapper.vm.$refs.formElement as HTMLFormElement).outerHTML);
 
-        console.log(nameInput.element.value);
-        console.log(emailInput.element.value);
-        console.log(messageInput.element.value);
+        console.log(nameInput.element);
+        console.log(emailInput.element);
+        console.log(messageInput.element);
         
         const submitButton = wrapper.find("button");
         await submitButton.trigger("click");
 
         expect(wrapper.emitted()).toHaveProperty("submit");
     });
-    */
 });
