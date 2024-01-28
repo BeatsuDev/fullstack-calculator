@@ -17,7 +17,7 @@ describe("Calculator functions", () => {
         setActivePinia(createPinia());
         wrapper = mount(BasicCalculator, {
             global: {
-                plugins: [createTestingPinia({ stubActions: false, })],
+                plugins: [createTestingPinia({ stubActions: false })],
             },
         });
     });
@@ -45,7 +45,7 @@ describe("Calculator functions", () => {
         store.addInput("2");
         store.addInput("3");
         await wrapper.vm.$nextTick();
-        
+
         const display = wrapper.find("#calculator-display");
         expect(display.text()).toBe("123");
     });
@@ -54,7 +54,7 @@ describe("Calculator functions", () => {
         const store = useCalculatorStore();
 
         const buttons = wrapper.findAll("button");
-        const clearButton = buttons.filter((button) => button.text() === "AC")[0];
+        const clearButton = buttons.filter((button) => button.text() === "C")[0];
         await clearButton.trigger("click");
 
         expect(store.clearDisplay).toHaveBeenCalled();
@@ -76,8 +76,8 @@ describe("Calculator functions", () => {
         const buttons = wrapper.findAll("button");
         const oneButton = buttons.filter((button) => button.text() === "1")[0];
         const plusButton = buttons.filter((button) => button.text() === "+")[0];
-        const equalsButton = buttons.filter((button) => button.text() === "=")[0]; 
-        
+        const equalsButton = buttons.filter((button) => button.text() === "=")[0];
+
         await oneButton.trigger("click");
         await plusButton.trigger("click");
         await oneButton.trigger("click");
@@ -94,8 +94,8 @@ describe("Calculator functions", () => {
         const buttons = wrapper.findAll("button");
         const oneButton = buttons.filter((button) => button.text() === "1")[0];
         const plusButton = buttons.filter((button) => button.text() === "+")[0];
-        const equalsButton = buttons.filter((button) => button.text() === "=")[0]; 
-        
+        const equalsButton = buttons.filter((button) => button.text() === "=")[0];
+
         await oneButton.trigger("click");
         await plusButton.trigger("click");
         await oneButton.trigger("click");

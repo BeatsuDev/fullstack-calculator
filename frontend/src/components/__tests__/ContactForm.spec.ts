@@ -12,7 +12,7 @@ describe("Calculator functions", () => {
 
     it("should render correct text labels for each field", () => {
         const fields = wrapper.findAll("label");
-        const fieldTexts = fields.map(field => field.text());
+        const fieldTexts = fields.map((field) => field.text());
 
         expect(fieldTexts).toEqual(["Name", "Email", "Message"]);
     });
@@ -47,14 +47,16 @@ describe("Calculator functions", () => {
         await emailInput.setValue("john.doe@example.com");
         await messageInput.setValue("A 10+ character long message.");
 
-        console.log((wrapper.vm.$refs.formElement as HTMLFormElement).outerHTML);
+        await wrapper.vm.$nextTick();
 
-        console.log(nameInput.element);
-        console.log(emailInput.element);
-        console.log(messageInput.element);
-        
+        console.log((nameInput.element as HTMLInputElement).value);
+        console.log((emailInput.element as HTMLInputElement).value);
+        console.log((messageInput.element as HTMLInputElement).value);
+
         const submitButton = wrapper.find("button");
         await submitButton.trigger("click");
+
+        await wrapper.vm.$nextTick();
 
         expect(wrapper.emitted()).toHaveProperty("submit");
     });

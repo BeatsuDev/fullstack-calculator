@@ -3,7 +3,6 @@ import { useCalculatorStore } from "@/stores/calculator";
 import { useCalculatorHistoryStore, type Calculation } from "@/stores/history";
 import { storeToRefs } from "pinia";
 
-
 const buttons = [
     { name: "(", type: "operator", css: "" },
     { name: ")", type: "operator", css: "" },
@@ -26,7 +25,7 @@ const buttons = [
     { name: "+", type: "operator", css: "" },
 ] as const;
 
-type ButtonType = typeof buttons[number]["type"];
+type ButtonType = (typeof buttons)[number]["type"];
 
 function buttonCssFor(buttonType: ButtonType): string {
     switch (buttonType) {
@@ -86,7 +85,7 @@ function handleEqualsPressed() {
 
     const calculation: Calculation = {
         expression: display.value,
-        answer: result.toString()
+        answer: result.toString(),
     };
 
     calculatorHistoryStore.addCalculation(calculation);
@@ -96,7 +95,10 @@ function handleEqualsPressed() {
 
 <template>
     <div id="calculator-container" class="border-2 border-white rounded-xl p-5 bg-gray-800 mx-auto min-w-80">
-        <div id="calculator-display" class="p-2 mb-4 border-2 border-white bg-gray-500 box-content h-8 text-2xl text-end align-middle">
+        <div
+            id="calculator-display"
+            class="p-2 mb-4 border-2 border-white bg-gray-500 box-content h-8 text-2xl text-end align-middle"
+        >
             {{ display }}
         </div>
         <div id="calculator-buttons" class="grid grid-cols-4">
