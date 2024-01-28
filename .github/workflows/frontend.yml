@@ -3,35 +3,40 @@ on: [push]
 jobs:
   prettier:
     name: formatter
+    
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
 
-      - run: cd frontend
       - run: bun install
+        working-directory: frontend
       - run: bun run format --check
+        working-directory: frontend
 
   vitest:
     name: unit tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
 
-      - run: cd frontend
       - run: bun install
+        working-directory: frontend
       - run: bun run test:unit
+        working-directory: frontend
   
   cypress:
     name: integration tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
 
       # tbh, using bun here is useless. It just runs vite anyway. Maybe faster install time tho?
-      - run: cd frontend
       - run: bun install
+        working-directory: frontend
       - run: bun run build
+        working-directory: frontend
       - run: bun run test:e2e
+        working-directory: frontend
