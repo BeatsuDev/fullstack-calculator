@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeAll } from "vitest";
+import { flushPromises } from "@vue/test-utils";
 
 import { mount } from "@vue/test-utils";
 import ContactForm from "@/components/ContactForm.vue";
@@ -47,16 +48,8 @@ describe("Calculator functions", () => {
         await emailInput.setValue("john.doe@example.com");
         await messageInput.setValue("A 10+ character long message.");
 
-        await wrapper.vm.$nextTick();
-
-        console.log((nameInput.element as HTMLInputElement).value);
-        console.log((emailInput.element as HTMLInputElement).value);
-        console.log((messageInput.element as HTMLInputElement).value);
-
-        const submitButton = wrapper.find("button");
-        await submitButton.trigger("click");
-
-        await wrapper.vm.$nextTick();
+        await wrapper.find("form").trigger("submit");
+        await flushPromises();
 
         expect(wrapper.emitted()).toHaveProperty("submit");
     });
