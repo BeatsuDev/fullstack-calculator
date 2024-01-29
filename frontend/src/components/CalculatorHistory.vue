@@ -17,7 +17,8 @@ const { history } = storeToRefs(calculatorHistoryStore);
         </div>
         <div id="historic-calculations" class="flex flex-col-reverse">
             <div
-                v-for="calculation in history"
+                v-for="(calculation, index) in history"
+                :key="index"
                 class="whitespace-nowrap text-ellipsis overflow-hidden text-center mb-1"
             >
                 <span>{{ calculation.expression }}</span> =

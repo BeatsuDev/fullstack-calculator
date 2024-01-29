@@ -1,4 +1,4 @@
-import { describe, beforeEach, it, vi, expect, afterAll } from "vitest";
+import { describe, beforeEach, it, vi, expect } from "vitest";
 import { setActivePinia, createPinia } from "pinia";
 import { createTestingPinia } from "@pinia/testing";
 
@@ -9,8 +9,8 @@ import { useCalculatorHistoryStore } from "@/stores/history";
 
 
 describe("Calculator functions", () => {
-    let numberButtons = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-    let allButtons = [...numberButtons, "+", "-", "*", "/", "=", "C", "(", ")"];
+    const numberButtons = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    const allButtons = [...numberButtons, "+", "-", "*", "/", "=", "C", "(", ")"];
 
     let wrapper: ReturnType<typeof mount>;
     global.fetch = vi.fn().mockResolvedValue({
@@ -27,7 +27,7 @@ describe("Calculator functions", () => {
     });
 
     it("renders all buttons", () => {
-        for (let button of allButtons) {
+        for (const button of allButtons) {
             expect(wrapper.text()).toContain(button);
         }
     });

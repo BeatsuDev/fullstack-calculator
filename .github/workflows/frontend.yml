@@ -1,9 +1,8 @@
 name: Frontend CI
 on: [push]
 jobs:
-  prettier:
-    name: formatter
-    
+  format:
+    name: formatting
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,6 +16,23 @@ jobs:
         working-directory: frontend
 
       - run: npm run format --check
+        working-directory: frontend
+
+  lint:
+    name: linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache node modules
+        uses: actions/cache@v4
+        with:
+          path: frontend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
+
+      - run: npm install
+        working-directory: frontend
+
+      - run: npm run lint:check
         working-directory: frontend
 
   vitest:
