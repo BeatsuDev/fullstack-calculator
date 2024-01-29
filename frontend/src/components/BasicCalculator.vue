@@ -53,43 +53,34 @@ function handleClick(button: (typeof buttons)[number]): void {
         case "clear":
             return calculatorStore.clearDisplay();
         case "equal":
-            return handleEqualsPressed();
+            handleEqualsPressed();
+            return;
         default:
             throw new Error("All button types were not handled in handleClick") as never;
     }
 }
 
-function handleEqualsPressed() {
+async function handleEqualsPressed() {
     if (display.value === "") {
         return;
     }
 
-    let result: any;
     try {
-        // TODO: Connect to backend
-        result = eval(display.value);
+        const response = await fetch("http://localhost:8080/calculate?expression=" + encodeURIComponent(display.value))
+        const data = await response.json();
+
+        if (data.error) {
+            calculatorStore.setDisplay("Error");
+            throw new Error("Could not evaluate expression.\n\n" + data.error);
+        }
+
+        const expression = data as Calculation;
+        calculatorHistoryStore.addCalculation(expression);
+        calculatorStore.setDisplay(expression.answer.toString());
     } catch (error: any) {
         calculatorStore.setDisplay("Error");
         throw new Error("Could not evaluate expression.\n\n" + error);
     }
-
-    if (typeof result !== "number") {
-        calculatorStore.setDisplay("Error");
-        throw new Error("Result is not a number");
-    }
-
-    if (result === Infinity || result === -Infinity || isNaN(result)) {
-        calculatorStore.setDisplay("Error");
-        throw new Error("Result is not a number");
-    }
-
-    const calculation: Calculation = {
-        expression: display.value,
-        answer: result.toString(),
-    };
-
-    calculatorHistoryStore.addCalculation(calculation);
-    calculatorStore.setDisplay(result.toString());
 }
 </script>
 
