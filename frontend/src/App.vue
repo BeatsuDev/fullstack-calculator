@@ -7,10 +7,10 @@ import { RouterLink, RouterView } from "vue-router";
         <nav>
             <ul class="flex flex-row justify-around text-2xl w-3/5 min-w-[500px] mx-auto">
                 <li>
-                    <RouterLink to="/">Home</RouterLink>
+                    <RouterLink id="route-to-home" to="/">Home</RouterLink>
                 </li>
                 <li>
-                    <RouterLink to="/contact">Contact</RouterLink>
+                    <RouterLink id="route-to-contact" to="/contact">Contact</RouterLink>
                 </li>
             </ul>
         </nav>
