@@ -3,6 +3,13 @@ import { useCalculatorStore } from "@/stores/calculator";
 import { useCalculatorHistoryStore, type Calculation } from "@/stores/history";
 import { storeToRefs } from "pinia";
 
+
+type Button = Readonly<{
+    name: string;
+    type: "number" | "operator" | "clear" | "equal";
+    css: string;
+}>;
+
 const buttons = [
     { name: "(", type: "operator", css: "" },
     { name: ")", type: "operator", css: "" },
@@ -23,20 +30,21 @@ const buttons = [
     { name: "0", type: "number", css: "" },
     { name: "=", type: "equal", css: "" },
     { name: "+", type: "operator", css: "" },
-] as const;
+] as readonly Button[];
 
-type ButtonType = (typeof buttons)[number]["type"];
 
-function buttonCssFor(buttonType: ButtonType): string {
-    switch (buttonType) {
+function cssForButton(button: Button): string {
+    switch (button.type) {
         case "number":
-            return "text-white bg-gray-500";
+            return button.css + " text-white bg-gray-500";
         case "operator":
-            return "text-white bg-blue-500/50";
+            return button.css + " text-white bg-blue-500/50";
         case "clear":
-            return "text-white bg-red-500";
+            return button.css + " text-white bg-red-500";
         case "equal":
-            return "bg-yellow-500 text-white";
+            return button.css + " bg-yellow-500 text-white";
+        default:
+            return button.type satisfies never;
     }
 }
 
@@ -65,22 +73,25 @@ async function handleEqualsPressed() {
         return;
     }
 
+    let data;
     try {
         const response = await fetch("http://localhost:8080/calculate?expression=" + encodeURIComponent(display.value))
-        const data = await response.json();
-
-        if (data.error) {
-            calculatorStore.setDisplay("Error");
-            throw new Error("Could not evaluate expression.\n\n" + data.error);
-        }
-
-        const expression = data as Calculation;
-        calculatorHistoryStore.addCalculation(expression);
-        calculatorStore.setDisplay(expression.answer.toString());
+        data = await response.json();
     } catch (error: any) {
         calculatorStore.setDisplay("Error");
         throw new Error("Could not evaluate expression.\n\n" + error);
     }
+
+    const numberAnswer = parseFloat(data.answer);
+
+    if (data.error || numberAnswer === undefined || numberAnswer === null || numberAnswer === Infinity || numberAnswer === -Infinity) {
+        calculatorStore.setDisplay("Error");
+        throw new Error("Could not evaluate expression.\n\n" + data.error);
+    }
+
+    const expression = data as Calculation;
+    calculatorHistoryStore.addCalculation(expression);
+    calculatorStore.setDisplay(expression.answer.toString());
 }
 </script>
 
@@ -97,7 +108,7 @@ async function handleEqualsPressed() {
                 class="m-1 p-4 text-2xl opacity-80 hover:opacity-100"
                 v-for="button in buttons"
                 :key="button.name"
-                :class="`${button.css} ${buttonCssFor(button.type)}`"
+                :class="cssForButton(button)"
                 @click="handleClick(button)"
             >
                 {{ button.name }}
